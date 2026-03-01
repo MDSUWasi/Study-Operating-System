@@ -1,23 +1,18 @@
-window.Modules = window.Modules || {};
+const STORAGE_KEY = 'studyflow_master_v5';
 
-Modules.Storage = {
-    state: JSON.parse(localStorage.getItem('STUDY_OS_L10')) || {
-        username: "Scholar",
+function saveState(state) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function loadState() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved ? JSON.parse(saved) : {
+        userName: 'Scholar',
         xp: 0,
+        level: 1,
         tasks: [],
-        theme: 'dark',
-        scratchpad: ""
-    },
-
-    save(shouldRender = true) {
-        localStorage.setItem('STUDY_OS_L10', JSON.stringify(this.state));
-        if (shouldRender && Modules.UI) Modules.UI.render();
-    },
-
-    clearAll() {
-        if (confirm("Wipe all data? This cannot be undone.")) {
-            localStorage.clear();
-            location.reload();
-        }
-    }
-};
+        scratchpad: '',
+        pages: [],
+        calendarTasks: {}
+    };
+}

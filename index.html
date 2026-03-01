@@ -1,77 +1,113 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Study Operating System</title>
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/writer.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
-
-    <div id="utility-window" class="hidden">
-        <div class="utility-container">
-            <nav class="utility-nav">
-                <div class="nav-left">
-                    <span class="app-tag">STUDY-OS</span>
-                    <button onclick="Modules.UI.switchUtility('summary')">Dashboard</button>
-                    <button onclick="Modules.UI.switchUtility('writer')" class="active">Writer</button>
+    <div class="app-container">
+        <aside class="sidebar glass">
+            <div class="profile-preview" id="nav-profile">
+                <div class="avatar-mini"><img id="side-profile-img" src="https://via.placeholder.com/40"></div>
+                <div class="side-info">
+                    <span id="side-name">Scholar</span>
+                    <p>SYSTEM ACTIVE</p>
                 </div>
-                <button onclick="Modules.UI.closeUtility()" class="btn-close-util">✕ SAVE & EXIT</button>
+            </div>
+            
+            <nav class="menu">
+                <p class="menu-label">Workspace</p>
+                <button class="menu-item active" data-view="view-dash">📊 Command Center</button>
+                <button class="menu-item" data-view="view-notes">📓 Knowledge Base</button>
+                <button class="menu-item" data-view="view-calendar">📅 Chronos</button>
+                <button class="menu-item" data-view="view-profile">👤 Identity Center</button>
+                
+                <p class="menu-label">Engine</p>
+                <button id="reset-data" class="menu-item reset-btn">🔄 Factory Reset</button>
             </nav>
-            <div id="utility-content"></div>
-        </div>
-    </div>
 
-    <div class="app-shell">
-        <aside class="sidebar">
-            <div class="brand">S10</div>
-            <nav>
-                <button onclick="Modules.UI.toggleTheme()" class="btn-icon-sidebar"><span id="theme-icon">🌓</span></button>
-                <button onclick="Modules.UI.openUtility('summary')">Stats</button>
-                <button onclick="Modules.UI.openUtility('writer')" class="btn-writer-trigger">WRITER</button>
-                <div class="nav-spacer"></div>
-                <button onclick="Modules.Storage.clearAll()" class="btn-reset">🔄</button>
-            </nav>
+            <div class="card glass timer-widget">
+                <div id="timer-mins">25:00</div>
+                <button id="start-timer" class="btn-primary">Focus</button>
+            </div>
         </aside>
 
-        <main class="content">
-            <header class="banner-pro">
-                <div class="user-block">
-                    <h1 id="username" contenteditable="true" spellcheck="false">Scholar</h1>
-                    <div class="xp-system">
-                        <div class="xp-rail"><div id="xp-fill"></div></div>
-                        <span id="lvl-display">Level 1</span>
-                    </div>
+        <main class="main-content">
+            <section id="view-dash" class="content-view">
+                <div class="glass xp-card">
+                    <span class="label">NEURAL PROGRESS</span>
+                    <div class="xp-bar-bg"><div id="xp-fill" class="xp-bar-fill"></div></div>
+                    <p>XP: <span id="xp-current">0</span> / 500</p>
                 </div>
-                <div class="stat-group">
-                    <div class="stat-pill">Pending: <span id="stat-pending">0</span></div>
-                    <div class="stat-pill">Completed: <span id="stat-done">0</span></div>
-                </div>
-            </header>
 
-            <div class="dashboard-grid">
-                <div class="main-col">
+                <div class="dashboard-grid">
                     <div class="card glass">
-                        <div class="input-row">
-                            <input type="text" id="task-input" placeholder="Enter task...">
-                            <button onclick="Modules.Tasks.add()" class="btn-main">ADD</button>
+                        <h3>🎯 Objectives</h3>
+                        <div class="input-group">
+                            <input type="text" id="task-input" placeholder="Initiate task...">
+                            <button id="add-task" class="btn-primary">+</button>
                         </div>
                         <ul id="task-list"></ul>
                     </div>
-                </div>
-                <div class="side-col">
                     <div class="card glass">
-                        <h3>Scratchpad</h3>
-                        <textarea id="scratchpad"></textarea>
+                        <h3>⚡ Scratchpad</h3>
+                        <textarea id="scratchpad" placeholder="Temporary data stream..."></textarea>
                     </div>
                 </div>
-            </div>
+            </section>
+
+            <section id="view-notes" class="content-view hidden">
+                <div class="view-header">
+                    <h2>Knowledge Base</h2>
+                    <button id="add-doc" class="btn-primary">+ New Module</button>
+                </div>
+                <div id="docs-grid" class="grid-layout"></div>
+            </section>
+
+            <section id="view-calendar" class="content-view hidden">
+                <div class="card glass">
+                    <div class="calendar-nav">
+                        <button id="prev-month">◀</button>
+                        <h2 id="month-year">Month</h2>
+                        <button id="next-month">▶</button>
+                    </div>
+                    <div class="calendar-grid" id="calendar-days"></div>
+                </div>
+            </section>
+
+            <section id="view-profile" class="content-view hidden">
+                <div class="card glass profile-card">
+                    <h2>Identity Settings</h2>
+                    <input type="text" id="user-name-input" class="glass-input" placeholder="Enter Name">
+                    <button id="save-profile" class="btn-primary">Update Identity</button>
+                    <div class="stats-row">
+                        <div class="stat-item glass">Level <span id="prof-level">1</span></div>
+                        <div class="stat-item glass">Total XP <span id="prof-xp">0</span></div>
+                    </div>
+                </div>
+            </section>
         </main>
     </div>
 
+    <div id="writer-overlay" class="overlay hidden">
+        <div class="writer-container glass">
+            <div class="writer-header">
+                <button id="close-writer" class="btn-secondary">⬅ Back & Save</button>
+                <div class="writer-tools">
+                    <span id="word-count">0 words</span>
+                    <button id="export-doc" class="btn-primary accent">💾 Export .Doc</button>
+                </div>
+            </div>
+            <input type="text" id="doc-title-input" class="title-input" placeholder="Untitled Module">
+            <div id="editor" contenteditable="true" placeholder="Start writing..."></div>
+        </div>
+    </div>
+
     <script src="js/storage.js"></script>
-    <script src="js/writer.js"></script>
     <script src="js/ui.js"></script>
+    <script src="js/timer.js"></script>
 </body>
 </html>

@@ -1,118 +1,167 @@
-Modules.UI = {
-    init() {
-        const s = Modules.Storage.state;
-        
-        // Restore Name & Setup Persistence
-        const nameEl = document.getElementById('username');
-        if(nameEl) {
-            nameEl.innerText = s.username || "Scholar";
-            nameEl.onblur = () => {
-                Modules.Storage.state.username = nameEl.innerText;
-                Modules.Storage.save(false);
+window.onload = function() {
+    let state = loadState();
+    let currentNavDate = new Date();
+
+    // --- NAVIGATION ENGINE ---
+    const navButtons = document.querySelectorAll('.menu-item[data-view]');
+    const views = document.querySelectorAll('.content-view');
+
+    navButtons.forEach(btn => {
+        btn.onclick = () => {
+            const target = btn.getAttribute('data-view');
+            navButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            views.forEach(v => v.classList.add('hidden'));
+            const targetView = document.getElementById(target);
+            targetView.classList.remove('hidden');
+            
+            if(target === 'view-calendar') renderCalendar();
+            if(target === 'view-notes') renderNotesGrid();
+        };
+    });
+
+    // --- KNOWLEDGE BASE & PRO-WRITER ---
+    function renderNotesGrid() {
+        const grid = document.getElementById('docs-grid');
+        grid.innerHTML = '';
+        state.pages.forEach(p => {
+            const card = document.createElement('div');
+            card.className = 'card glass';
+            card.innerHTML = `
+                <h3 style="margin-bottom:12px">${p.title || 'New Module'}</h3>
+                <button class="btn-primary" onclick="openNote('${p.id}')">Open Module</button>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    window.openNote = (id) => {
+        const p = state.pages.find(x => x.id === id);
+        state.currentPageId = id;
+        document.getElementById('doc-title-input').value = p.title;
+        document.getElementById('editor').innerHTML = p.content;
+        document.getElementById('writer-overlay').classList.remove('hidden');
+        updateWordCount();
+    };
+
+    function updateWordCount() {
+        const text = document.getElementById('editor').innerText;
+        const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+        document.getElementById('word-count').innerText = `${words} words`;
+    }
+
+    document.getElementById('add-doc').onclick = () => {
+        const id = 'p' + Date.now();
+        state.pages.push({ id: id, title: 'New Module', content: '' });
+        saveState(state);
+        renderNotesGrid();
+        openNote(id);
+    };
+
+    // Auto-Save Listeners
+    document.getElementById('editor').oninput = () => {
+        const p = state.pages.find(x => x.id === state.currentPageId);
+        if(p) { p.content = document.getElementById('editor').innerHTML; saveState(state); updateWordCount(); }
+    };
+
+    document.getElementById('doc-title-input').oninput = (e) => {
+        const p = state.pages.find(x => x.id === state.currentPageId);
+        if(p) { p.title = e.target.value; saveState(state); }
+    };
+
+    // Export to Doc
+    document.getElementById('export-doc').onclick = () => {
+        const content = document.getElementById('editor').innerText;
+        const title = document.getElementById('doc-title-input').value || "Module";
+        const blob = new Blob(['\ufeff', content], { type: 'application/msword' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${title}.doc`;
+        link.click();
+    };
+
+    document.getElementById('close-writer').onclick = () => {
+        document.getElementById('writer-overlay').classList.add('hidden');
+        renderNotesGrid(); // Refresh dashboard
+    };
+
+    // --- CHRONOS CALENDAR ---
+    function renderCalendar() {
+        const grid = document.getElementById('calendar-days');
+        const label = document.getElementById('month-year');
+        grid.innerHTML = '';
+        const y = currentNavDate.getFullYear();
+        const m = currentNavDate.getMonth();
+        label.innerText = currentNavDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+
+        const first = new Date(y, m, 1).getDay();
+        const days = new Date(y, m + 1, 0).getDate();
+
+        for (let i = 0; i < first; i++) grid.appendChild(document.createElement('div'));
+        for (let i = 1; i <= days; i++) {
+            const d = document.createElement('div');
+            d.className = 'calendar-day';
+            const key = `${y}-${m+1}-${i}`;
+            if(state.calendarTasks[key]) d.style.borderColor = "var(--accent)";
+            if(i === new Date().getDate() && m === new Date().getMonth()) d.classList.add('today');
+            d.innerText = i;
+            d.onclick = () => {
+                const t = prompt("Daily Mission:", state.calendarTasks[key] || "");
+                if(t !== null) { state.calendarTasks[key] = t; saveState(state); renderCalendar(); }
             };
+            grid.appendChild(d);
         }
+    }
 
-        // Restore Scratchpad
-        const scratch = document.getElementById('scratchpad');
-        if(scratch) {
-            scratch.value = s.scratchpad || "";
-            scratch.oninput = (e) => {
-                Modules.Storage.state.scratchpad = e.target.value;
-                Modules.Storage.save(false);
-            };
-        }
+    document.getElementById('prev-month').onclick = () => { currentNavDate.setMonth(currentNavDate.getMonth()-1); renderCalendar(); };
+    document.getElementById('next-month').onclick = () => { currentNavDate.setMonth(currentNavDate.getMonth()+1); renderCalendar(); };
 
-        document.documentElement.setAttribute('data-theme', s.theme || 'dark');
-        
-        // Enter key for tasks
-        const taskInput = document.getElementById('task-input');
-        if(taskInput) {
-            taskInput.onkeydown = (e) => { if(e.key === 'Enter') Modules.Tasks.add(); };
-        }
+    // --- UI SYNC ---
+    function updateUI() {
+        document.getElementById('side-name').innerText = state.userName;
+        document.getElementById('xp-current').innerText = state.xp;
+        document.getElementById('xp-fill').style.width = (state.xp/500*100) + "%";
+        document.getElementById('prof-level').innerText = state.level;
+        document.getElementById('prof-xp').innerText = state.xp;
+        renderTasks();
+    }
 
-        this.render();
-    },
-
-    openUtility(tab) {
-        document.getElementById('utility-window').classList.remove('hidden');
-        this.switchUtility(tab);
-    },
-
-    closeUtility() {
-        document.getElementById('utility-window').classList.add('hidden');
-    },
-
-    switchUtility(tab) {
-        const container = document.getElementById('utility-content');
-        if (tab === 'writer') {
-            container.innerHTML = `
-                <div class="writer-standalone">
-                    <div class="writer-toolbar-pro">
-                        <button onclick="Modules.Writer.exec('bold')">B</button>
-                        <button onclick="Modules.Writer.exec('italic')">I</button>
-                        <button onclick="Modules.Writer.exportAs('docx')" class="btn-docx">Save .DOCX</button>
-                    </div>
-                    <div id="pro-editor" contenteditable="true"></div>
-                </div>`;
-            Modules.Writer.initEditor();
-        } else {
-            container.innerHTML = `<div style="padding:100px; color:white;"><h1>Stats</h1><p>XP: ${Modules.Storage.state.xp}</p></div>`;
-        }
-    },
-
-    toggleTheme() {
-        const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', next);
-        document.getElementById('theme-icon').innerText = next === 'dark' ? '🌓' : '☀️';
-        Modules.Storage.state.theme = next;
-        Modules.Storage.save(false);
-    },
-
-    render() {
-        const s = Modules.Storage.state;
-        
-        // Update Counters
-        document.getElementById('stat-pending').innerText = s.tasks.filter(t => !t.done).length;
-        document.getElementById('stat-done').innerText = s.tasks.filter(t => t.done).length;
-        
-        // Update XP
-        document.getElementById('lvl-display').innerText = `Level ${Math.floor(s.xp/1000) + 1}`;
-        document.getElementById('xp-fill').style.width = (s.xp % 1000 / 10) + "%";
-
-        // Render Tasks
+    function renderTasks() {
         const list = document.getElementById('task-list');
         list.innerHTML = '';
-        s.tasks.forEach((task, index) => {
+        state.tasks.forEach((t, i) => {
             const li = document.createElement('li');
-            li.className = `task-item ${task.done ? 'is-done' : ''}`;
-            li.innerHTML = `
-                <input type="checkbox" ${task.done ? 'checked' : ''} onchange="Modules.Tasks.toggle(${index})">
-                <span>${task.text}</span>
-                <button onclick="Modules.Tasks.remove(${index})">✕</button>
-            `;
+            li.style.display = "flex"; li.style.gap = "10px"; li.style.marginBottom = "10px";
+            li.innerHTML = `<input type="checkbox" ${t.done?'checked':''} onchange="toggleT(${i})"> <span style="${t.done?'opacity:0.5;text-decoration:line-through':''}">${t.text}</span>`;
             list.appendChild(li);
         });
     }
-};
 
-Modules.Tasks = {
-    add() {
-        const input = document.getElementById('task-input');
-        if(!input.value.trim()) return;
-        Modules.Storage.state.tasks.push({ text: input.value, done: false });
-        input.value = '';
-        Modules.Storage.save();
-    },
-    toggle(index) {
-        const t = Modules.Storage.state.tasks[index];
-        t.done = !t.done;
-        Modules.Storage.state.xp += t.done ? 50 : -50;
-        Modules.Storage.save();
-    },
-    remove(index) {
-        Modules.Storage.state.tasks.splice(index, 1);
-        Modules.Storage.save();
-    }
-};
+    window.toggleT = (i) => {
+        state.tasks[i].done = !state.tasks[i].done;
+        if(state.tasks[i].done) {
+            state.xp += 50;
+            if(state.xp >= 500) { state.level++; state.xp = 0; }
+        }
+        saveState(state); updateUI();
+    };
 
-window.onload = () => Modules.UI.init();
+    document.getElementById('add-task').onclick = () => {
+        const inp = document.getElementById('task-input');
+        if(inp.value) { state.tasks.push({text: inp.value, done: false}); inp.value=''; saveState(state); updateUI(); }
+    };
+
+    document.getElementById('save-profile').onclick = () => {
+        state.userName = document.getElementById('user-name-input').value;
+        saveState(state); updateUI(); alert("Neural Identity Updated.");
+    };
+
+    document.getElementById('reset-data').onclick = () => { if(confirm("Initiate Factory Reset? All data will be lost.")) { localStorage.clear(); location.reload(); } };
+
+    document.getElementById('scratchpad').oninput = (e) => { state.scratchpad = e.target.value; saveState(state); };
+    document.getElementById('scratchpad').value = state.scratchpad;
+
+    updateUI();
+};
