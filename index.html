@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Operating System</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/writer.css">
+</head>
+<body>
+
+    <div id="utility-window" class="hidden">
+        <div class="utility-container">
+            <nav class="utility-nav">
+                <div class="nav-left">
+                    <span class="app-tag">STUDY-OS</span>
+                    <button onclick="Modules.UI.switchUtility('summary')">Dashboard</button>
+                    <button onclick="Modules.UI.switchUtility('writer')" class="active">Writer</button>
+                </div>
+                <button onclick="Modules.UI.closeUtility()" class="btn-close-util">✕ SAVE & EXIT</button>
+            </nav>
+            <div id="utility-content"></div>
+        </div>
+    </div>
+
+    <div class="app-shell">
+        <aside class="sidebar">
+            <div class="brand">S10</div>
+            <nav>
+                <button onclick="Modules.UI.toggleTheme()" class="btn-icon-sidebar"><span id="theme-icon">🌓</span></button>
+                <button onclick="Modules.UI.openUtility('summary')">Stats</button>
+                <button onclick="Modules.UI.openUtility('writer')" class="btn-writer-trigger">WRITER</button>
+                <div class="nav-spacer"></div>
+                <button onclick="Modules.Storage.clearAll()" class="btn-reset">🔄</button>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <header class="banner-pro">
+                <div class="user-block">
+                    <h1 id="username" contenteditable="true" spellcheck="false">Scholar</h1>
+                    <div class="xp-system">
+                        <div class="xp-rail"><div id="xp-fill"></div></div>
+                        <span id="lvl-display">Level 1</span>
+                    </div>
+                </div>
+                <div class="stat-group">
+                    <div class="stat-pill">Pending: <span id="stat-pending">0</span></div>
+                    <div class="stat-pill">Completed: <span id="stat-done">0</span></div>
+                </div>
+            </header>
+
+            <div class="dashboard-grid">
+                <div class="main-col">
+                    <div class="card glass">
+                        <div class="input-row">
+                            <input type="text" id="task-input" placeholder="Enter task...">
+                            <button onclick="Modules.Tasks.add()" class="btn-main">ADD</button>
+                        </div>
+                        <ul id="task-list"></ul>
+                    </div>
+                </div>
+                <div class="side-col">
+                    <div class="card glass">
+                        <h3>Scratchpad</h3>
+                        <textarea id="scratchpad"></textarea>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/writer.js"></script>
+    <script src="js/ui.js"></script>
+</body>
+</html>

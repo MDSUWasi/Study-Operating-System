@@ -1,0 +1,114 @@
+:root {
+    --primary: #818cf8; --bg: #030712; --glass: rgba(17, 24, 39, 0.85);
+    --border: rgba(255, 255, 255, 0.08); --text: #f3f4f6; --danger: #f43f5e;
+}
+
+[data-theme="light"] {
+    --bg: #f8fafc; --glass: rgba(255, 255, 255, 0.9); --text: #1e293b; --border: rgba(0, 0, 0, 0.1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+body { 
+    background: var(--bg); 
+    color: var(--text); 
+    height: 100vh; 
+    width: 100vw;
+    overflow: hidden; 
+}
+
+/* THE DASHBOARD */
+.app-shell { 
+    display: flex; 
+    height: 100vh; 
+    width: 100%;
+    position: relative;
+    z-index: 1; /* Dashboard stays at base */
+}
+
+.sidebar { 
+    width: 85px; 
+    background: var(--glass); 
+    border-right: 1px solid var(--border); 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    padding: 20px 0; 
+}
+
+.content { flex: 1; padding: 40px; overflow-y: auto; }
+
+/* THE FULL SCREEN POPUP */
+#utility-window {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    z-index: 9999; /* Sits on top of everything */
+    display: flex;
+    flex-direction: column;
+}
+
+.hidden { display: none !important; }
+
+/* DASHBOARD ELEMENTS */
+.banner-pro { 
+    background: var(--glass); 
+    border: 1px solid var(--border); 
+    border-radius: 24px; 
+    padding: 25px; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 25px; 
+}
+
+.xp-rail { width: 200px; height: 8px; background: var(--border); border-radius: 10px; overflow: hidden; }
+#xp-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.5s; }
+
+.dashboard-grid { display: grid; grid-template-columns: 1fr 300px; gap: 20px; }
+.card { background: var(--glass); border-radius: 20px; padding: 20px; border: 1px solid var(--border); }
+
+.stat-pill { background: var(--glass); padding: 8px 15px; border-radius: 50px; border: 1px solid var(--border); font-size: 13px; font-weight: bold; }
+
+/* BUTTONS */
+.btn-main { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; }
+.btn-reset { color: var(--danger) !important; border-color: var(--danger) !important; font-size: 20px !important; margin-top: 20px; }
+.sidebar button { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text); width: 50px; height: 50px; border-radius: 12px; margin-bottom: 10px; cursor: pointer; }
+
+/* ENHANCED SCRATCHPAD SIZE */
+#scratchpad { 
+    width: 100%; 
+    height: 450px; /* Increased height from 250px */
+    background: rgba(0, 0, 0, 0.2); 
+    border: 1px solid var(--border); 
+    border-radius: 15px; 
+    padding: 20px; 
+    color: var(--text); 
+    resize: vertical; /* Allows you to manually stretch it even more */
+    outline: none;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-top: 10px;
+    transition: border 0.3s ease;
+}
+
+#scratchpad:focus {
+    border-color: var(--primary);
+    background: rgba(0, 0, 0, 0.3);
+}
+
+/* Adjusting the side column to fit the larger pad */
+.side-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.side-col .card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
