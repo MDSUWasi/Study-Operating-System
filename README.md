@@ -1,4 +1,4 @@
-# Study Operating System | Level 10 Elite 🚀
+# Study Operating System |
 
 **Study Operating System** is a privacy-first, gamified productivity dashboard designed to bridge the gap between deep work and organized note-taking. Built with a modular vanilla JavaScript architecture, it offers a distraction-free environment for scholars and professionals.
 
