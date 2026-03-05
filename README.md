@@ -54,7 +54,3 @@ A full-screen, dedicated word processor that mimics a professional desktop envir
 
 ![Screenshot](image/images5.png)
 
----
-## 🚀 Getting Started
-
-1. **Clone the Repository:**
