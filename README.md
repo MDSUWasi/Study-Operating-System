@@ -44,15 +44,15 @@ A full-screen, dedicated word processor that mimics a professional desktop envir
 
 ## Screenshots
 
-![Screenshot](Images/Screenshot From 2026-03-01 22-32-40.png)
+![Screenshot](image/images1.png)
 
-![Screenshot](Images/Screenshot From 2026-03-01 22-32-47.png)
+![Screenshot](image/images2.png)
 
-![Screenshot](Images/Screenshot From 2026-03-01 22-33-14.png)
+![Screenshot](image/images3.png)
 
-![Screenshot](Images/Screenshot From 2026-03-01 22-33-20.png)
+![Screenshot](image/images4.png)
 
-![Screenshot](Images/Screenshot From 2026-03-01 23-13-03.png)
+![Screenshot](image/images5.png)
 
 ---
 ## 🚀 Getting Started
