@@ -3,7 +3,6 @@
 **Study Operating System** is a privacy-first, gamified productivity dashboard designed to bridge the gap between deep work and organized note-taking. Built with a modular vanilla JavaScript architecture, it offers a distraction-free environment for scholars and professionals.
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Version](https://img.shields.io/badge/version-10.4%20Elite-blueviolet)
 ![Privacy](https://img.shields.io/badge/Data%20Privacy-Local%20Only-green)
 
 ---
