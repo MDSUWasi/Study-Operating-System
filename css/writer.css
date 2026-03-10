@@ -1,0 +1,57 @@
+/* FULL SCREEN WRITER STYLES */
+.writer-standalone {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #fdfdfd; /* Paper White */
+    color: #1a1a1a;
+    animation: fadeIn 0.3s ease;
+}
+
+.writer-toolbar-pro {
+    background: #f1f5f9;
+    padding: 10px 40px;
+    display: flex;
+    gap: 15px;
+    border-bottom: 1px solid #e2e8f0;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.writer-toolbar-pro button {
+    padding: 8px 14px;
+    background: #fff;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.writer-toolbar-pro button:hover { background: #f8fafc; }
+
+.export-group { margin-left: auto; display: flex; gap: 10px; }
+
+.btn-docx { background: #2b579a !important; color: white !important; border: none !important; }
+.btn-pdf { background: #dc2626 !important; color: white !important; border: none !important; }
+
+/* The Actual Paper Content */
+#pro-editor {
+    flex: 1;
+    padding: 80px 15% 100px 15%; /* Large document margins */
+    overflow-y: auto;
+    outline: none;
+    font-family: 'Lora', serif; /* Professional Serif Font */
+    font-size: 19px;
+    line-height: 1.8;
+    color: #2c3e50;
+    background: #fff;
+    width: 100%;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

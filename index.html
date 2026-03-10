@@ -1,0 +1,183 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+<title>Study Operating System</title> 
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body> <div id="desktop-wallpaper" class="desktop-container">
+        
+        <header class="status-bar glass">
+            <div class="sys-time" id="clock">00:00:00</div> <div class="sys-user" onclick="openApp('app-profile')">SYSTEM: ONLINE</div> </header>
+
+        <div class="central-launcher">
+            <div class="app-icon-wrapper" onclick="openApp('app-profile')">
+                <div class="app-icon glass"><img src="assets/Profile.png" style="width: 60%; height: auto;"></div> <span>Identity</span> </div>
+
+            <div class="app-icon-wrapper" onclick="openApp('app-chronos')">
+                <div class="app-icon glass"><img src="assets/Date.png" style="width: 60%; height: auto;"></div>  <span>Calendar</span> </div>
+
+            <div class="app-icon-wrapper" onclick="openApp('app-writer')">
+                <div class="app-icon glass"><img src="assets/Note.png" style="width: 60%; height: auto;"></div>  <span>Study Section</span> </div>
+
+            <div class="app-icon-wrapper" onclick="openApp('app-stats')">
+                <div class="app-icon glass"><img src="assets/Intelligence.png" style="width: 60%; height: auto;"></div>  <span>Intelligence</span> </div>
+
+            <div class="app-icon-wrapper" onclick="openApp('app-settings')">
+                <div class="app-icon glass"><img src="assets/System.png" style="width: 60%; height: auto;"></div>  <span>System</span> </div>
+        </div>
+
+    </div> <div id="app-profile" class="window full-screen glass hidden"> <button class="close-btn" onclick="closeApp('app-profile')">✕ DISCONNECT</button> <div class="profile-hero"> <div id="profile-banner" class="banner-view">
+                <div class="banner-overlay"></div> </div>
+
+            <div class="pfp-container">
+                <img id="display-pfp" src="https://via.placeholder.com/150" alt="Profile"> <div class="pfp-glow"></div> </div>
+        </div>
+
+        <div class="profile-content"> <h1 id="user-name-display" contenteditable="true">SCHOLAR_NAME</h1> <p id="user-bio-display" contenteditable="true">System Architecture | Neural Mapping | Study Core</p> <div class="stats-row">
+                <div class="stat-bubble glass">
+                    <span class="label">RANK</span>
+                    <span class="value">Student</span>
+                </div>
+                <div class="stat-bubble glass">
+                    <span class="label">LEVEL</span>
+                    <span class="value" id="user-level">Study</span>
+                </div>
+                <div class="stat-bubble glass">
+                    <span class="label">STREAK</span>
+                    <span class="value">STUDY DAYS</span>
+                </div>
+            </div>
+
+            <div class="identity-config glass">
+                <h3>CALIBRATE IDENTITY</h3>
+                <div class="config-row">
+                    <label>Change Banner Image</label>
+                    <input type="file" id="banner-upload" accept="image/*"> </div>
+                <div class="config-row">
+                    <label>Change Profile Picture</label>
+                    <input type="file" id="pfp-upload" accept="image/*"> </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="app-chronos" class="window full-screen glass hidden">
+        <button class="close-btn" onclick="closeApp('app-chronos')">✕ EXIT CHRONOS</button>
+
+        <div class="chronos-wrapper">
+            <div class="chronos-nav">
+                <button onclick="changeMonth(-1)">PREVIOUS</button>
+                <h2 id="month-label">MARCH 3026</h2>
+                <button onclick="changeMonth(1)">NEXT</button>
+            </div>
+
+            <div id="calendar-grid" class="calendar-layout"></div>
+        </div>
+
+        <div id="day-inspector" class="inspector-overlay glass hidden">
+            <button class="close-btn" onclick="closeInspector()">✕ CLOSE DAY</button>
+            <div class="inspector-grid">
+                <div class="inspector-column glass">
+                    <h3>DAILY ROUTINE</h3>
+                    <div id="routine-editor" class="data-list"></div> <button class="add-btn" onclick="addRoutineItem()">+ ADD PULSE</button> </div>
+                <div class="inspector-column glass">
+                    <h3>OBJECTIVES</h3>
+                    <div id="task-editor" class="data-list"></div> <div class="task-input-bar">
+                        <input type="text" id="new-task-input" placeholder="Initiate target...">
+                        <button onclick="addNewTask()">ADD</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="app-writer" class="window full-screen glass hidden">
+        <button class="close-btn" onclick="closeApp('app-writer')">✕ SAVE & EXIT</button>
+
+        <div class="writer-container">
+            <aside class="writer-tools glass">
+                <h3>METADATA</h3>
+                <div class="meta-field">
+                    <label>SUBJECT</label>
+                    <input type="text" id="study-subject" placeholder="e.g., AI Ethics">
+                </div>
+                <div class="meta-field">
+                    <label>FOCUS GOAL (MINS)</label>
+                    <input type="number" id="user-timer-input" value="25"> </div>
+                <button class="timer-trigger" onclick="startFocusSession()">START FOCUS SESSION</button>
+                
+                <hr class="writer-sep">
+                
+                <h3>INJECTORS</h3>
+                <button class="tool-btn" onclick="inject('table')">GRID</button>
+                <button class="tool-btn" onclick="inject('math')">MATH</button>
+                <button class="tool-btn" onclick="inject('box')">CALLOUT</button>
+            </aside>
+
+            <main class="editor-view">
+                <div class="focus-timer-overlay" id="active-timer">00:00</div> <input type="text" id="note-title" class="title-input" placeholder="Module Title...">
+                <div id="neural-editor" contenteditable="true" spellcheck="false"></div> </main>
+        </div>
+    </div>
+
+    <div id="app-stats" class="window full-screen glass hidden">
+        <button class="close-btn" onclick="closeApp('app-stats')">✕ EXIT INTELLIGENCE</button>
+        <div class="stats-hub">
+            <h1>NEURAL METRICS</h1>
+            <div class="metrics-grid">
+                <div class="metric-card glass">
+                    <span class="metric-label">TOTAL STUDY TIME</span>
+                    <span class="metric-value" id="stat-total-time">0.0 HRS</span>
+                </div>
+                <div class="metric-card glass">
+                    <span class="metric-label">MODULES CREATED</span>
+                    <span class="metric-value" id="stat-total-notes">0</span>
+                </div>
+            </div>
+            <div class="db-log glass">
+                <h3>STUDY SESSION HISTORY</h3>
+                <div id="session-log-list" class="log-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="app-settings" class="window full-screen glass hidden">
+        <button class="close-btn" onclick="closeApp('app-settings')">✕ EXIT SETTINGS</button>
+        <div class="settings-wrap glass">
+            <h2>SYSTEM CALIBRATION</h2>
+            <div class="opt-group">
+                <label>Update System Name</label>
+                <input type="text" id="config-username">
+            </div>
+            <div class="settings-group glass" style="padding: 20px; margin-top: 20px; border-radius: 15px; border: 1px solid var(--glass-border);">
+    <h3 class="neon-text" style="font-size: 14px; margin-bottom: 15px; opacity: 0.8;">DATA ARCHIVE</h3>
+    
+    <div style="display: flex; gap: 10px; flex-direction: column;">
+        <button onclick="exportNeuralData()" class="btn-glow" style="width: 100%;">
+            DOWNLOAD NEURAL BACKUP
+        </button>
+        
+        <label for="import-upload" class="btn-glow" style="text-align: center; background: rgba(255,255,255,0.05); box-shadow: none; border: 1px solid var(--glass-border); cursor: pointer;">
+            RESTORE FROM BACKUP
+        </label>
+        
+        <input type="file" id="import-upload" onchange="importNeuralData(event)" class="hidden" accept=".json">
+    </div>
+    
+    <p style="font-size: 10px; color: var(--text-dim); margin-top: 10px; text-align: center;">
+        * Backups are saved as .json files locally.
+    </p>
+</div>
+            <div class="opt-group">
+                <label>Neon Accent Color</label>
+                <input type="color" id="config-color" value="#00f2ff">
+            </div>
+            <button class="save-system-btn" onclick="saveSystemConfig()">APPLY CALIBRATION</button>
+            <button class="wipe-btn" onclick="factoryReset()">WIPE CORE (DELETE ALL)</button>
+        </div>
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/ui.js"></script> 
+</body> 
+</html>
+

@@ -1,0 +1,322 @@
+/* ========================================================== */
+/* 1. ARCHITECTURE & VARIABLES                                */
+/* ========================================================== */
+:root {
+    /* 100% INTERNAL FONTS: Using the best fonts built into your device */
+    --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-data: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+
+    /* The primary "Neon Cyan" signature of the 31st century */
+    --accent: #00f2ff; 
+    --accent-glow: rgba(0, 242, 255, 0.4);
+    
+    /* Deep space obsidian - the base of the OS */
+    --bg-dark: #020408; 
+    
+    /* The "Glass" recipe: very low opacity white with high blur */
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    
+    /* Text colors for high readability */
+    --text-main: #e2e8f0;
+    --text-dim: #94a3b8;
+    
+    /* Standardized timing for all animations */
+    --transit: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* GLOBAL RESET: Now pointing to internal system fonts */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font-main);
+    -webkit-font-smoothing: antialiased;
+}
+
+body {
+    background: var(--bg-dark);
+    color: var(--text-main);
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+/* ========================================================== */
+/* 2. CORE UTILITIES (The Glass Effect)                       */
+/* ========================================================== */
+
+.glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(25px) saturate(180%);
+    -webkit-backdrop-filter: blur(25px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+}
+
+/* NEON TEXT: Now uses the Technical Data font for a "hacker" vibe */
+.neon-text {
+    font-family: var(--font-data);
+    color: var(--accent);
+    text-shadow: 0 0 15px var(--accent-glow);
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+/* ========================================================== */
+/* 3. DESKTOP & LAUNCHER                                      */
+/* ========================================================== */
+
+.desktop-container {
+    height: 100vh;
+    width: 100vw;
+    background: radial-gradient(circle at 50% 50%, #0f172a 0%, #020408 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.status-bar {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95%;
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+    border-radius: 100px;
+    z-index: 10;
+}
+
+/* Time display uses technical font */
+.sys-time {
+    font-family: var(--font-data);
+    font-weight: bold;
+    color: var(--accent);
+}
+
+.central-launcher {
+    display: flex;
+    gap: 40px;
+}
+
+.app-icon-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: var(--transit);
+}
+
+.app-icon {
+    width: 85px;
+    height: 85px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    border-radius: 24px;
+    transition: var(--transit);
+}
+
+.app-icon-wrapper:hover .app-icon {
+    transform: translateY(-10px) scale(1.1);
+    border-color: var(--accent);
+    box-shadow: 0 0 30px var(--accent-glow);
+}
+
+.app-icon-wrapper span {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    opacity: 0.6;
+}
+
+/* ========================================================== */
+/* 4. FULL-SCREEN WINDOW ENGINE                               */
+/* ========================================================== */
+
+.window {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    padding: 80px 40px;
+    overflow-y: auto;
+    transition: var(--transit);
+}
+
+.window:not(.hidden) {
+    animation: bootUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes bootUp {
+    from { opacity: 0; transform: scale(1.05); filter: blur(20px); }
+    to { opacity: 1; transform: scale(1); filter: blur(0); }
+}
+
+.close-btn {
+    position: absolute;
+    top: 40px;
+    right: 60px;
+    background: none;
+    border: 1px solid var(--glass-border);
+    color: var(--text-dim);
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: 0.3s;
+}
+
+/* ========================================================== */
+/* 5. IDENTITY MODULE (Social Style)                          */
+/* ========================================================== */
+
+.profile-hero {
+    position: relative;
+    max-width: 1100px;
+    margin: 0 auto 100px;
+}
+
+.banner-view {
+    height: 320px;
+    border-radius: 40px;
+    background: linear-gradient(45deg, #0f172a, #1e293b);
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+}
+
+.pfp-container {
+    position: absolute;
+    bottom: -60px;
+    left: 80px;
+}
+
+#display-pfp {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    border: 6px solid var(--bg-dark);
+    object-fit: cover;
+}
+
+.profile-content {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding-left: 80px;
+}
+
+#user-name-display { 
+    font-size: 52px; 
+    font-weight: 800; 
+    letter-spacing: -1.5px; 
+}
+
+/* ========================================================== */
+/* 6. CHRONOS HUB (Calendar Fixes)                            */
+/* ========================================================== */
+
+.chronos-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.calendar-layout {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 15px;
+}
+
+.cal-day {
+    height: 160px;
+    padding: 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* BUG FIX: Added spacer style for proper date alignment */
+.cal-spacer {
+    height: 160px;
+    visibility: hidden;
+}
+
+.day-indicator {
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    align-self: center;
+    box-shadow: 0 0 10px var(--accent-glow);
+}
+
+/* ========================================================== */
+/* 7. NEURAL WRITER (Editor)                                  */
+/* ========================================================== */
+
+#active-timer {
+    font-family: var(--font-data); /* technical look */
+    font-size: 32px;
+    color: var(--accent);
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.title-input {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 64px;
+    font-weight: 800;
+    width: 100%;
+    margin-bottom: 30px;
+    outline: none;
+    letter-spacing: -2px;
+}
+
+#neural-editor {
+    font-size: 20px;
+    line-height: 1.8;
+    color: #cbd5e1;
+    outline: none;
+}
+
+/* ========================================================== */
+/* 8. FORM ELEMENTS & SCROLLBAR                               */
+/* ========================================================== */
+
+input[type="text"], input[type="number"] {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--glass-border);
+    color: white;
+    padding: 12px 18px;
+    border-radius: 12px;
+    outline: none;
+}
+
+.btn-glow {
+    background: var(--accent);
+    color: var(--bg-dark);
+    border: none;
+    padding: 15px 30px;
+    border-radius: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 0 20px var(--accent-glow);
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 10px; }
+
+.hidden { display: none !important; }
