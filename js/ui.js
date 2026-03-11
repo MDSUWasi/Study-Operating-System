@@ -1,7 +1,4 @@
-/**
- * NEXUS OS: NEURAL ENGINE (v3.0)
- * Core Logic for Windowing, Chronos, and Deep-Work Logging
- */
+
 
 // 1. GLOBAL STATE INITIALIZATION
 // We pull the data from storage.js immediately so the OS "remembers" the user
